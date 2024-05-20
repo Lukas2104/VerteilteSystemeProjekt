@@ -8,6 +8,7 @@ Die App ermöglicht es den Spielern, sich in einem von vier Chat-Räumen zu verb
 PictoChat nutzt den Touchscreen und den Stylus des DS, um sowohl handschriftliche Nachrichten als auch Skizzen zu erstellen.
 
 ![pictowiki](https://github.com/Lukas2104/bildermalenundverschicken/assets/39993215/a06357a5-d522-417e-8d7f-3e33d352d13e)
+
 (https://en.wikipedia.org/wiki/PictoChat)
 
 ## Idee und Planung
