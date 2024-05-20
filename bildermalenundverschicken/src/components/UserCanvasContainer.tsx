@@ -82,9 +82,7 @@ export const UserCanvasContainer = () => {
         };
         userCanvas.current.clearCanvas();
         //setUserInput("");
-        /*
         await socket.emit("chat", message)
-        */
     }
 
     /*

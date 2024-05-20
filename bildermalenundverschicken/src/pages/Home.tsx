@@ -2,6 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { PictoLogo } from "../icons/CanvasIcons";
+import { RemoteInfo, Socket } from "dgram";
+
+const dgram = require('dgram');
+var os = require('os');
+
+const PORT = 3000;
+const login_message_start ="login ";
+let connected_ips = new Map<string, string>();
 
 export const Home = () => {
   let usernameRef = useRef<any>();
@@ -21,8 +29,7 @@ export const Home = () => {
       <JoinFormContainer>
         <form onSubmit={joinRoom}>
           <p style={{ color: "gray" }}>bildermalenundverschicken</p>
-
-          <PictoInput
+          {/* <PictoInput
             type="text"
             ref={usernameRef}
             name="username"
@@ -37,7 +44,7 @@ export const Home = () => {
             placeholder="Room Number"
             defaultValue={parseInt(roomId as string) || ""}
             required
-          ></PictoInput>
+          ></PictoInput> */}
           <ButtonContainer>
             <SqaureButton type="submit" name="submit">
               Join
@@ -47,6 +54,27 @@ export const Home = () => {
       </JoinFormContainer>
     </Centered>
   );
+};
+
+const connect = () => {
+  let server = dgram.createSocket('udp4');
+  server.on('message', parseMessage);
+
+  server.on('listening', broadcast_hello);
+   
+  server.on('close', () => {});
+ 
+  server.bind(PORT, broadcast_address);
+}
+
+const parseMessage = (msg: string, rinfo: RemoteInfo) => {
+  console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+  if(msg.startsWith(login_message_start)){
+      var username = msg.replace(login_message_start, "");
+      connected_ips.set(rinfo.address, username);
+  }else{
+      onMessage(msg);
+  }
 };
 
 const PictoInput = styled.input`
