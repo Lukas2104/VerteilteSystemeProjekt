@@ -1,0 +1,26 @@
+{
+  "name": "bildermalenundverschicken",
+  "version": "1.0.0",
+  "description": "bilder malen und verschicken",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lukas2104/bildermalenundverschicken.git"
+  },
+  "author": "lars, lukas, cesar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lukas2104/bildermalenundverschicken/issues"
+  },
+  "homepage": "https://github.com/Lukas2104/bildermalenundverschicken#readme",
+  "dependencies": {
+    "dgram": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
