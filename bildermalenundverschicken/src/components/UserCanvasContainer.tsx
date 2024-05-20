@@ -110,14 +110,6 @@ export const UserCanvasContainer = () => {
           userCanvas.current.setColor(messages[0]?.currentUserColor);
     }, [messages]);
 
-    /*
-    const shareRoom = () => {
-        let copyLink = window.location.origin;
-        navigator.clipboard.writeText(
-          copyLink + "?room=" + searchParams.get("roomname")
-        );
-      };
-
     const scrollMessages = (sign: number) => {
         messageContainerRef?.current?.scrollTo({ x: 0, y: 100 * sign });
     }
@@ -214,7 +206,7 @@ export const UserCanvasContainer = () => {
                 <SquareButton
                   className="clear"
                   onClick={() => {
-                    userCanvas.current.clearCanvas();
+                    userCanvas.current.clearCanvas(); 
                   }}
                 >
                     Löschen
