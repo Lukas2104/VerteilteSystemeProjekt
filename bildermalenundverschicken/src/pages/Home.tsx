@@ -2,18 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { PictoLogo } from "../icons/CanvasIcons";
-import { RemoteInfo, Socket } from "dgram";
 
-const dgram = require('dgram');
-var os = require('os');
-
-const PORT = 3000;
-const login_message_start ="login ";
-let connected_ips = new Map<string, string>();
+// var os = require('os');
 
 export const Home = () => {
   let usernameRef = useRef<any>();
-  let roomnameRef = useRef<any>();
+  // let roomnameRef = useRef<any>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [roomId, setRoomId] = useState(() => searchParams.get("room"));
 
@@ -21,7 +15,7 @@ export const Home = () => {
     e.preventDefault();
     window.location.href =
       window.location.origin +
-      `/chat?username=${usernameRef.current.value}&roomname=${roomnameRef.current.value}`;
+      `/chat?username=${usernameRef.current.value}`;
   };
 
   return (
@@ -29,15 +23,14 @@ export const Home = () => {
       <JoinFormContainer>
         <form onSubmit={joinRoom}>
           <p style={{ color: "gray" }}>bildermalenundverschicken</p>
-          {/* <PictoInput
+          <PictoInput
             type="text"
             ref={usernameRef}
             name="username"
             placeholder="Username"
             required
           ></PictoInput>
-
-          <PictoInput
+          {/* <PictoInput
             type="number"
             ref={roomnameRef}
             name="roomNumber"
@@ -54,27 +47,6 @@ export const Home = () => {
       </JoinFormContainer>
     </Centered>
   );
-};
-
-const connect = () => {
-  let server = dgram.createSocket('udp4');
-  server.on('message', parseMessage);
-
-  server.on('listening', broadcast_hello);
-   
-  server.on('close', () => {});
- 
-  server.bind(PORT, broadcast_address);
-}
-
-const parseMessage = (msg: string, rinfo: RemoteInfo) => {
-  console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-  if(msg.startsWith(login_message_start)){
-      var username = msg.replace(login_message_start, "");
-      connected_ips.set(rinfo.address, username);
-  }else{
-      onMessage(msg);
-  }
 };
 
 const PictoInput = styled.input`

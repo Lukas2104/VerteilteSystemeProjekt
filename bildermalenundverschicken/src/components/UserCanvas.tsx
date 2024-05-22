@@ -1,94 +1,75 @@
 import React from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 
-export const Canvas = class extends React.Component<any,any> {
+export const Canvas = class extends React.Component<any, any> {
     canvas: React.RefObject<any>;
 
-    constructor(props:any) {
+    constructor(props: any) {
         super(props);
         this.canvas = React.createRef();
-        this.state = {strokeWidth: 3, color: props.color};
+        this.state = { strokeWidth: 3, color: props.color };
     }
 
-    bigPenMode(){
-        this.setState({...this.state, strokeWidth: 7})
-    }
+    bigPenMode = () => {
+        this.setState({ strokeWidth: 7 });
+    };
 
-    smallPenMode(){
-        this.setState({...this.state, strokeWidth: 3})
-    }
+    smallPenMode = () => {
+        this.setState({ strokeWidth: 3 });
+    };
 
-    eraseMode(){
-        this.canvas.current.eraseMode(true)
-    }
+    eraseMode = () => {
+        if (this.canvas.current) {
+            this.canvas.current.eraseMode(true);
+        }
+    };
 
-    penMode(){
-        this.canvas.current.eraseMode(false)
-    }
+    penMode = () => {
+        if (this.canvas.current) {
+            this.canvas.current.eraseMode(false);
+        }
+    };
 
-    clearCanvas(){
-        this.canvas.current.clearCanvas()
-    }
+    clearCanvas = () => {
+        if (this.canvas.current) {
+            this.canvas.current.clearCanvas();
+        }
+    };
 
-    grabSvg(paths:any){
-        this.canvas.current.loadPaths(paths)
-    }
+    grabSvg = () => {
+        return this.canvas.current?.exportPaths();
+    };
 
-    fillSvg(paths:any){
-        this.canvas.current.loadPaths(paths)
-    }
+    fillSvg = (paths: any) => {
+        if (this.canvas.current) {
+            this.canvas.current.loadPaths(paths);
+        }
+    };
 
-    grabImage(){
-        return this.canvas.current.exportImage("png")
-    }
+    grabImage = () => {
+        return this.canvas.current?.exportImage("png");
+    };
 
-    setColor(color:string){
-        this.setState({...this.state, color: color})
-    }
+    setColor = (color: string) => {
+        this.setState({ color: color });
+    };
 
     render() {
         return (
-            <>
-              <ReactSketchCanvas 
+            <ReactSketchCanvas
                 className="canvas"
                 style={{
                     border: `3px solid ${this.state.color}`,
-                    borderRadius: '8px',
-                    backgroundSize: 'contain',
-                    backgroundColor: 'white',
-                    marginLeft: '15px',
-                    width:"calc(100% - 22px)"
-                  }}
+                    borderRadius: "8px",
+                    backgroundSize: "contain",
+                    backgroundColor: "white",
+                    marginLeft: "15px",
+                    width: "calc(100% - 22px)"
+                }}
                 ref={this.canvas}
                 strokeWidth={this.state.strokeWidth}
                 strokeColor="black"
-              />
-            </>
-        )
+            />
+        );
     }
-
-    /*
-    render() {
-        return (
-            <>
-                <ReactSketchCanvas
-                  className="canvas"
-                  style={{
-                    border: `3px solid ${this.state.color}`,
-                    borderRadius: '8px',
-                    backgroundSize: 'contain',
-                    backgroundColor: 'white',
-                    marginLeft: '10px',
-                    marginRight: 0,
-                    width:"calc(100% - 22px)"
-                  }}
-                  ref={this.canvas}
-                  strokeWidth={this.state.strokeWidth}
-                  strokeColor="black"
-                  backgroundImage='https://i.imgur.com/UWSVFu3.png'
-                />
-            </>
-        )
-    }
-    */
-}
+};

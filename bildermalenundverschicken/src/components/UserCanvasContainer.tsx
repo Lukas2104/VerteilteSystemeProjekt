@@ -1,141 +1,99 @@
 import React, { useEffect, useRef, useState } from "react";
-//import { ReactSketchCanvas } from "react-sketch-canvas";
 import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client"
-//import Color from "color";
 import styled from "styled-components";
-/*
-import {
-    BigBrushIcon,
-    ClearIcon,
-    EraserToolIcon,
-    PenToolIcon,
-    PictoLogo,
-    PullIcon,
-    SendIcon,
-    SmallBrushIcon,
-  } from "../icons/CanvasIcons";
-*/
-//import { Keys } from "./Keys";
 import { Canvas } from "./UserCanvas";
-//import { isMobile } from "react-device-detect";
-//import { ClipLoader } from "react-spinners";
-//import { BiShare } from "react-icons/bi";
-//import { RiArrowUpSFill, RiArrowDownSFill } from "react-icons/ri";
-//import { AiOutlineClose } from "react-icons/ai";
 
 export const UserCanvasContainer = () => {
-    
     const [userInput, setUserInput] = useState("");
     const [penType, setPenType] = useState(true);
     const [penWidth, setPenWidth] = useState(true);
     const [messages, setMessages] = useState<any>([]);
-    const [socket] = useState(() => io("wss://picto-socket.onrender.com/"))
+    const [socket] = useState(() => io("http://localhost:3000"))
     const [userColor, setUserColor] = useState("gray");
     const [userLighterColor, setUserLighterColor] = useState("lightgray");
     const [usersInRoom, setUsersInRoom] = useState([]);
     const [loadingMessage, setLoadingMessage] = useState("");
-
     const userCanvas = useRef<any>();
     const messageContainerRef = useRef<any>();
     const [searchParams] = useSearchParams();
-
-    /*
-    useEffect(() => {
-        const color = Color(userColor);
-        const lighterColor = Color(color).lighten(0.6).toString();
-
-        if (Color(lighterColor).hex() === Color({ r: 255, g: 255, b: 255 }).hex()) {
-            setUserLighterColor(color.lighten(0.25).toString());
-        } else {
-            setUserLighterColor(lighterColor)
-        }
-    }, [userColor]);
+    const [username, setUsername] = useState<any>("Test-User")
 
     useEffect(() => {
-        if (
-            searchParams.get("username") === null ||
-            searchParams.get("username") === "" ||
-            searchParams.get("roomname") === null ||
-            searchParams.get("roomname") === ""
-        ) {
-            window.location.href = window.location.origin;
-        }
+      socket.on("receive_message", (data) => {
+        setMessages((prevMessages: any) => [...prevMessages, data]);
+      });
 
-        socket.emit("joinRoom", {
-            username: searchParams.get("username"),
-            roomname: searchParams.get("roomname"),
-        });
+      return () => {
+        socket.off("receive_message");
+      };
+    }, [socket]);
 
-        return () => {
-            socket.emit("leave room");
-        };
-    }, []);
-    */
+    useEffect(() => {
+      try {
+        setUsername(searchParams.get("username"))
+      } catch (e) {
+        console.error(e);
+      }
+    })
 
     const sendMessage = async () => {
-        
         let message = {
-            //text: userInput,
+            username: username,
             svg: await userCanvas.current.grabSvg(),
             image: await userCanvas.current.grabImage(),
         };
+        socket.emit("send_message", message)
         userCanvas.current.clearCanvas();
-        //setUserInput("");
-        await socket.emit("chat", message)
-    }
-
-    /*
-
-    useEffect(() => {
-        socket.on("message", (recv: any) => {
-          setMessages((om: any) => [...om, recv]);
-        });
-      }, []);
-
-    useEffect(() => {
-        let announcement_messages = messages.filter(
-            (msg: any) => msg.type === "announcement"
-        );
-        socket.connected &&
-          messageContainerRef?.current.scrollIntoView({ behavior: "smooth"});
-        setUserColor(messages[0]?.currentUserColor);
-        console.log(messages.filter((msg: any) => msg));
-        setUsersInRoom(
-          announcement_messages[announcement_messages.length - 1]?.users
-        );
-        socket.connected &&
-          userCanvas.current.setColor(messages[0]?.currentUserColor);
-    }, [messages]);
-
-    const scrollMessages = (sign: number) => {
-        messageContainerRef?.current?.scrollTo({ x: 0, y: 100 * sign });
-    }
-
-    useEffect(() => {
-        if (!socket.connected) {
-            setTimeout(() => {
-                setLoadingMessage("if loading continues consider refreshing");
-            }, 5000);
-        }
-    }, []);
-
-    const leaveRoom = () => {
-        window.location.href = window.location.origin;
     };
-    */
+
+    const backToHome = (e: any) => {
+      e.preventDefault();
+      window.location.href =
+        window.location.origin 
+    };
 
     return (
         <>
           <Centered>
             <MessagesContainer>
+              <MessagesSideContainer>
+                <SquareButton
+                  className="home"
+                  onClick={backToHome}
+                >
+                  Zurück
+                </SquareButton>
+              </MessagesSideContainer>
+              <MessagesAreaContainer>
               <PreviousMessagesContainer>
-                <PreviousMessage>
-
-                </PreviousMessage>
+                {messages.map((msg: any, index: any) => (
+                  <PreviousMessage 
+                    key={index}
+                    className="canvas"
+                    style={{
+                      backgroundImage: `url(${msg.image})`,
+                    }}
+                  >
+                    <MessagesTextContainer>
+                      <p>
+                          <div
+                            style={{
+                              borderColor: "gray",
+                              backgroundColor: "lightgray",
+                            }}
+                          >
+                              <h3 style={{ color: "gray" }}>{username}</h3>
+                          </div>
+                      </p>
+                    </MessagesTextContainer>
+                    {/* <p>{msg.username}</p>
+                    <img src={msg.image} alt="User Drawing"/> */}
+                  </PreviousMessage>
+                ))}
               </PreviousMessagesContainer>
+              </MessagesAreaContainer>
             </MessagesContainer>
-
             <CanvasAndButtonContainer>
               <ButtonsContainer>
                 <SquareButton
@@ -214,7 +172,7 @@ export const UserCanvasContainer = () => {
                 <UserContainer>
                     <UserBox>
                         <UserColorBox/>
-                        <p>Test-Nutzer</p>
+                        <p>{username}</p>
                     </UserBox>
                 </UserContainer>
                 <UserInputContainer>
@@ -231,7 +189,7 @@ export const UserCanvasContainer = () => {
                                 backgroundColor: "lightgray",
                               }}
                             >
-                                <h3 style={{ color: "gray" }}>Test-Nutzer</h3>
+                                <h3 style={{ color: "gray" }}>{username}</h3>
                             </div>
                         </p>
                       </CanvasTextContainer>
@@ -405,6 +363,7 @@ const MessagesContainer = styled.div`
   width: 100%;
   max-width: 480px;
   background: #aaaab3;
+  background: white;
   height: 260px;
   display: flex;
   justify-content: space-between;
@@ -438,179 +397,63 @@ const PreviousMessage = styled.div`
   border: 3px solid gray;
 `;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-const DisconnectButton = styled.div`
-  width: 15px;
-  height: 15px;
-  background: lightgray;
-  border: 1.5px solid gray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: gray;
-  border-radius: 2px;
-  cursor: pointer;
-  transition-duration: 0.2s;
-
-  &:hover {
-    background: darkgray;
-  }
-`;
-
-const ShareButton = styled.div`
-  z-index: 1000;
-  position: fixed;
-  right: -3px;
-  bottom: -3px;
-  height: 40px;
-  width: 40px;
-  background: white;
-  border: 3px solid darkgray;
-  border-top-left-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: gray;
-
-  &::after {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    content: "";
-    left: -6px;
-    bottom: -6px;
-    right: -6px;
-    top: -6px;
-    border: 3px solid white;
-    border-top-left-radius: 12px;
-    border-right: 0;
-    border-bottom: 0;
-  }
-`;
-
-const SendButton = styled.div`
-  background-color: #d9d9d9;
-  width: 100%;
-  height: 33%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  & svg {
-    height: 90%;
-  }
-
-  &:hover {
-    filter: brightness(105%);
-  }
-`;
-
-const MessageBlip = styled.div`
-  width: 25px;
-  height: 5px;
-  background: gray;
-  margin-bottom: 5px;
-`;
-
-const MessageMiniMap = styled.div`
-  width: 35px;
-  height: 250px;
+const MessagesSideContainer = styled.div`
+  width: 100px;
+  height: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  background: white;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-`;
-
-const KeyboardContainer = styled.div`
-  width: 100%;
-  max-height: 148px;
-  background: white;
-  background-image: url("https://i.imgur.com/QkNhB5p.png");
-  background-size: contain;
-  overflow: hidden;
-
-  margin-left: 10px;
-  margin-top: 20px;
-  margin-right: 10px;
-  border-radius: 15px;
+  justify-content: center;
 
   @media screen and (max-width: 600px) {
-    max-height: 120.5px;
-
-    & * {
-      display: none;
-    }
+    height: 200px;
   }
 `;
 
-const InputContainer = styled.div`
-  display: flex;
+const MessagesAreaContainer = styled.div`
   width: 100%;
-  height: 230px;
-  flex-grow: 1;
-`;
-
-const SendButtonsContainer = styled.div`
-  height: 150px;
-  width: 80px;
-  background: white;
-  border-top-left-radius: 15px;
-  overflow: hidden;
-  border-bottom-left-radius: 15px;
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  align-items: flex-end;
+  overflow: hidden;
+  margin-right: 30px;
+  padding-right: 4px;
+  background-color: #aaaab3;;
+`;
 
-  & .clear {
-    height: 24%;
-    padding-top: 7px;
-    padding-bottom: 6px;
-  }
-  & .send {
-    height: 35%;
-  }
-  & .pull {
-    height: 24%;
-    padding-top: 7px;
-    padding-bottom: 6px;
+const MessagesTextContainer = styled.div`
+  position: absolute;
+  top: 0;
+  width: calc(100% - 30px);
+  left: 16px;
+  height: calc(100%);
+  user-select: none;
+  pointer-events: none;
+  display: flex;
+
+  & div {
+    min-width: 100px;
+    height: 30px;
+    border: 3px solid gray;
+    border-top: 2px solid gray;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 8px;
+    display: inline-block;
+    text-align: center;
+    line-height: 0;
+    background: white;
+    margin-left: -19px;
+
+    & h3 {
+      margin-top: 15px;
+      font-size: 20px;
+    }
   }
 
-  @media screen and (max-width: 600px) {
-    max-height: 120.5px;
-
-    & .clear {
-      padding-top: 4px;
-      padding-bottom: 3px;
-    }
-    & .send {
-      padding-top: 2px;
-      padding-bottom: 1px;
-    }
-    & .pull {
-      padding-top: 4px;
-      padding-bottom: 3px;
-    }
+  & p {
+    margin-top: -2px;
+    line-height: 30px;
+    overflow-wrap: break-word;
+    white-space: pre-line;
   }
 `;
-*/
