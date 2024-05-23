@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/Lukas2104/bildermalenundverschicken#readme",
   "dependencies": {
-    "dgram": "^1.0.1"
+    "dgram": "^1.0.1",
+    "webrtc-adapter": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

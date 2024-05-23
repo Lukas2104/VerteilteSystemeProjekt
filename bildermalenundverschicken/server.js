@@ -14,7 +14,11 @@ io.on("connection", (socket) => {
     console.log("New client connected");
 
     socket.on("send_message", (data) => {
-        io.emit("receive_message", data);
+        socket.to(data.to).emit("receive_message", data);
+    });
+
+    socket.on("new_peer", (data) => {
+        socket.broadcast.emit("new_peer", { from: socket.id });
     });
 
     socket.on("disconnect", () => {
