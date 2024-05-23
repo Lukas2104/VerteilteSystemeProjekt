@@ -64,56 +64,59 @@ export const UserCanvasContainer = () => {
     }, [searchParams]);
 
     const createPeerConnection = (peerId: any, isInitiator: any) => {
-        const pc = new RTCPeerConnection(configuration);
+      const pc = new RTCPeerConnection(configuration);
 
-        pc.onicecandidate = (event) => {
-            if (event.candidate) {
-                socket.emit("send_message", {
-                    type: "candidate",
-                    candidate: event.candidate,
-                    to: peerId,
-                    from: socket.id
-                });
-            }
-        };
+      pc.onicecandidate = (event) => {
+          if (event.candidate) {
+              socket.emit("send_message", {
+                  type: "candidate",
+                  candidate: event.candidate,
+                  to: peerId,
+                  from: socket.id
+              });
+          }
+      };
 
-        pc.ondatachannel = (event) => {
-            const receiveChannel = event.channel;
-            receiveChannel.onmessage = (event) => {
-                const msg = JSON.parse(event.data);
-                setMessages((prevMessages: any) => [...prevMessages, msg]);
-            };
-            dataChannels.current[peerId] = receiveChannel;
-        };
+      if (isInitiator) {
+          const dataChannel = pc.createDataChannel("sendChannel");
+          setupDataChannel(peerId, dataChannel);
+          
+          pc.createOffer()
+              .then(offer => pc.setLocalDescription(offer))
+              .then(() => {
+                  socket.emit("send_message", {
+                      type: "offer",
+                      offer: pc.localDescription,
+                      to: peerId,
+                      from: socket.id
+                  });
+              })
+              .catch(e => console.error(e));
+      } else {
+          pc.ondatachannel = (event) => {
+              const receiveChannel = event.channel;
+              setupDataChannel(peerId, receiveChannel);
+          };
+      }
 
-        pc.onconnectionstatechange = (event) => {
-            if (pc.connectionState === 'connected') {
-                console.log("Peers connected");
-            }
-        };
+      pc.onconnectionstatechange = (event) => {
+          if (pc.connectionState === 'connected') {
+              console.log("Peers connected");
+          }
+      };
 
-        peerConnections.current[peerId] = pc;
+      peerConnections.current[peerId] = pc;
+  };
 
-        if (isInitiator) {
-            const sendChannel = pc.createDataChannel("sendChannel");
-            dataChannels.current[peerId] = sendChannel;
-
-            sendChannel.onopen = () => console.log("Data channel open");
-            sendChannel.onclose = () => console.log("Data channel closed");
-
-            pc.createOffer()
-                .then(offer => pc.setLocalDescription(offer))
-                .then(() => {
-                    socket.emit("send_message", {
-                        type: "offer",
-                        offer: pc.localDescription,
-                        to: peerId,
-                        from: socket.id
-                    });
-                })
-                .catch(e => console.error(e));
-        }
-    };
+  const setupDataChannel = (peerId: any, dataChannel: any) => {
+      dataChannel.onopen = () => console.log("Data channel open with", peerId);
+      dataChannel.onclose = () => console.log("Data channel closed with", peerId);
+      dataChannel.onmessage = (event: any) => {
+          const msg = JSON.parse(event.data);
+          setMessages((prevMessages: any) => [...prevMessages, msg]);
+      };
+      dataChannels.current[peerId] = dataChannel;
+  };
 
     const handleOffer = async (data: any) => {
         createPeerConnection(data.from, false);
