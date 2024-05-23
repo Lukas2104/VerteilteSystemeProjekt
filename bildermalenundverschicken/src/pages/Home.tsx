@@ -29,15 +29,7 @@ export const Home = () => {
             name="username"
             placeholder="Username"
             required
-          ></PictoInput>
-          {/* <PictoInput
-            type="number"
-            ref={roomnameRef}
-            name="roomNumber"
-            placeholder="Room Number"
-            defaultValue={parseInt(roomId as string) || ""}
-            required
-          ></PictoInput> */}
+          ></PictoInput>     
           <ButtonContainer>
             <SqaureButton type="submit" name="submit">
               Join
@@ -78,7 +70,6 @@ const Centered = styled.div`
 `;
 
 const JoinFormContainer = styled.div`
-  border-radius: 10px;
   background: white;
   border: 3px solid gray;
   width: 100%;
