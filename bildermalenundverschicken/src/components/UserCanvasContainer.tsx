@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
-import adapter from 'webrtc-adapter';
 import styled from "styled-components";
 import { Canvas } from "./UserCanvas";
 
@@ -14,17 +13,13 @@ const configuration = {
 };
 
 export const UserCanvasContainer = () => {
-    const [userInput, setUserInput] = useState("");
     const [penType, setPenType] = useState(true);
     const [penWidth, setPenWidth] = useState(true);
     const [messages, setMessages] = useState<any>([]);
     const [socket] = useState(() => io("http://localhost:3000"));
     const [userColor, setUserColor] = useState("gray");
     const [userLighterColor, setUserLighterColor] = useState("lightgray");
-    const [usersInRoom, setUsersInRoom] = useState([]);
-    const [loadingMessage, setLoadingMessage] = useState("");
     const userCanvas = useRef<any>();
-    const messageContainerRef = useRef<any>();
     const [searchParams] = useSearchParams();
     const [username, setUsername] = useState<any>("Test-User");
     const peerConnections = useRef<any>({});
@@ -168,6 +163,12 @@ export const UserCanvasContainer = () => {
         userCanvas.current.clearCanvas();
     };
 
+    const getLastMessage = () => {
+      userCanvas.current.clearCanvas();
+      let lastMessage = messages[messages.length-1];
+      userCanvas.current.fillSvg(lastMessage.svg);
+    } 
+
     const backToHome = (e: any) => {
         e.preventDefault();
         window.location.href = window.location.origin;
@@ -260,7 +261,7 @@ export const UserCanvasContainer = () => {
                         <SquareButton className="send" onClick={sendMessage}>
                             Senden
                         </SquareButton>
-                        <SquareButton>
+                        <SquareButton className="getLast" onClick={getLastMessage}>
                             Holen
                         </SquareButton>
                         <SquareButton
