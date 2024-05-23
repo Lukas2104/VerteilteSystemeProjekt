@@ -92,12 +92,14 @@ export const UserCanvasContainer = () => {
             }
         };
 
-        if (isInitiator) {
-            const channel = pc.createDataChannel("sendChannel");
-            dataChannels.current[peerId] = channel;
+        peerConnections.current[peerId] = pc;
 
-            channel.onopen = () => console.log("Data channel open");
-            channel.onclose = () => console.log("Data channel closed");
+        if (isInitiator) {
+            const sendChannel = pc.createDataChannel("sendChannel");
+            dataChannels.current[peerId] = sendChannel;
+
+            sendChannel.onopen = () => console.log("Data channel open");
+            sendChannel.onclose = () => console.log("Data channel closed");
 
             pc.createOffer()
                 .then(offer => pc.setLocalDescription(offer))
@@ -111,8 +113,6 @@ export const UserCanvasContainer = () => {
                 })
                 .catch(e => console.error(e));
         }
-
-        peerConnections.current[peerId] = pc;
     };
 
     const handleOffer = async (data: any) => {
