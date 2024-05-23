@@ -1,15 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useRef } from "react";
 import styled from "styled-components";
-import { PictoLogo } from "../icons/CanvasIcons";
 
 // var os = require('os');
 
 export const Home = () => {
   let usernameRef = useRef<any>();
-  // let roomnameRef = useRef<any>();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [roomId, setRoomId] = useState(() => searchParams.get("room"));
 
   const joinRoom = (e: any) => {
     e.preventDefault();
@@ -19,26 +14,32 @@ export const Home = () => {
   };
 
   return (
-    <Centered>
-      <JoinFormContainer>
-        <form onSubmit={joinRoom}>
-          <p style={{ color: "gray" }}>bildermalenundverschicken</p>
-          <PictoInput
-            type="text"
-            ref={usernameRef}
-            name="username"
-            placeholder="Username"
-            required
-          ></PictoInput>     
-          <ButtonContainer>
-            <SqaureButton type="submit" name="submit">
-              Join
-            </SqaureButton>
-          </ButtonContainer>
-        </form>
-      </JoinFormContainer>
-    </Centered>
-  );
+    <>
+      <Centered>
+        <TitleContainer>
+          <Title>bildermalenundverschicken</Title>
+        </TitleContainer>
+        <UserInfoAndJoinContainer>
+          <JoinFormContainer>
+            <form onSubmit={joinRoom}>
+              <PictoInput
+                type="text"
+                ref={usernameRef}
+                name="username"
+                placeholder="Nutzername"
+                required
+              ></PictoInput> 
+              <ButtonContainer>
+                <SqaureButton type="submit" name="submit">
+                  Beitreten
+                </SqaureButton>
+              </ButtonContainer>
+            </form>
+          </JoinFormContainer>
+        </UserInfoAndJoinContainer>
+      </Centered>
+    </>
+);
 };
 
 const PictoInput = styled.input`
@@ -62,16 +63,23 @@ const ButtonContainer = styled.div`
   align-items: center;
 `
 
-const Centered = styled.div`
+const TitleContainer = styled.div`
+  width: 100%;
+  max-width: 480px;
+  background: #aaaab3;
+  background: white;
+  height: 260px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: calc(100vh - 100px);
-`;
+`
+
+const Title = styled.h1`
+  margin-top: 100px;
+  color: gray;
+`
 
 const JoinFormContainer = styled.div`
   background: white;
-  border: 3px solid gray;
   width: 100%;
   max-width: 650px;
   display: flex;
@@ -99,4 +107,22 @@ const JoinFormContainer = styled.div`
       margin-top: 10px;
     }
   }
+`;
+
+const Centered = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    height: calc(100vh - 50px);
+`;
+
+const UserInfoAndJoinContainer = styled.div`
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    height: 260px;
+    display: flex;
+    justify-content: space-between;
 `;
