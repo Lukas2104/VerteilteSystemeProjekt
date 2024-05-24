@@ -24,6 +24,7 @@ export const UserCanvasContainer = () => {
     const [username, setUsername] = useState<any>("Test-User");
     const peerConnections = useRef<any>({});
     const dataChannels = useRef<any>({});
+    const messagesEndRef = useRef<any>(null);
 
     useEffect(() => {
         socket.on("receive_message", async (data) => {
@@ -57,6 +58,10 @@ export const UserCanvasContainer = () => {
             console.error(e);
         }
     }, [searchParams]);
+
+    useEffect(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
     const createPeerConnection = (peerId: any, isInitiator: any) => {
       const pc = new RTCPeerConnection(configuration);
@@ -207,6 +212,7 @@ export const UserCanvasContainer = () => {
                                     </MessagesTextContainer>
                                 </PreviousMessage>
                             ))}
+                            <div ref={messagesEndRef} />
                         </PreviousMessagesContainer>
                     </MessagesAreaContainer>
                 </MessagesContainer>
