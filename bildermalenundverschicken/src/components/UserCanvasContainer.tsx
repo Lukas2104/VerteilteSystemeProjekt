@@ -16,7 +16,7 @@ export const UserCanvasContainer = () => {
     const [penType, setPenType] = useState(true);
     const [penWidth, setPenWidth] = useState(true);
     const [messages, setMessages] = useState<any>([]);
-    const [socket] = useState(() => io("http://localhost:3000"));
+    const [socket] = useState(() => io("http://localhost:4000"));
     const [userColor] = useState<any>("gray");
     const [userLighterColor] = useState("lightgray");
     const userCanvas = useRef<any>();
