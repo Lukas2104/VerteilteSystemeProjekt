@@ -22,13 +22,13 @@ export const Home = () => {
         <UserInfoAndJoinContainer>
           <JoinFormContainer>
             <form onSubmit={joinRoom}>
-              <PictoInput
+              <UsernameInput
                 type="text"
                 ref={usernameRef}
                 name="username"
                 placeholder="Nutzername"
                 required
-              ></PictoInput> 
+              ></UsernameInput> 
               <ButtonContainer>
                 <SqaureButton type="submit" name="submit">
                   Beitreten
@@ -42,7 +42,7 @@ export const Home = () => {
 );
 };
 
-const PictoInput = styled.input`
+const UsernameInput = styled.input`
   width: 200px;
   border: 2px solid gray;
   padding: 5px;

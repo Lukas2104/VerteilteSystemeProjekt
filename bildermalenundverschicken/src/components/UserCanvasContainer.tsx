@@ -17,8 +17,6 @@ export const UserCanvasContainer = () => {
     const [penWidth, setPenWidth] = useState(true);
     const [messages, setMessages] = useState<any>([]);
     const [socket] = useState(() => io("http://localhost:4000"));
-    const [userColor] = useState<any>("gray");
-    const [userLighterColor] = useState("lightgray");
     const userCanvas = useRef<any>();
     const [searchParams] = useSearchParams();
     const [username, setUsername] = useState<any>("Test-User");
@@ -220,7 +218,7 @@ export const UserCanvasContainer = () => {
                     <ButtonsContainer>
                         <SquareButton
                             style={{
-                                backgroundColor: `${penType ? userLighterColor : "gray"}`,
+                                backgroundColor: `${penType ? "lightgray" : "gray"}`,
                             }}
                             onClick={() => {
                                 userCanvas.current.penMode();
@@ -231,7 +229,7 @@ export const UserCanvasContainer = () => {
                         </SquareButton>
                         <SquareButton
                             style={{
-                                backgroundColor: `${penType ? userColor : "lightgray"}`,
+                                backgroundColor: `${penType ? "gray" : "lightgray"}`,
                             }}
                             onClick={() => {
                                 userCanvas.current.eraseMode();
@@ -243,7 +241,7 @@ export const UserCanvasContainer = () => {
                         <br />
                         <SquareButton
                             style={{
-                                backgroundColor: `${penWidth ? userLighterColor : "gray"}`,
+                                backgroundColor: `${penWidth ? "lightgray" : "gray"}`,
                             }}
                             onClick={() => {
                                 userCanvas.current.smallPenMode();
@@ -254,7 +252,7 @@ export const UserCanvasContainer = () => {
                         </SquareButton>
                         <SquareButton
                             style={{
-                                backgroundColor: `${penWidth ? userColor : "lightgray"}`,
+                                backgroundColor: `${penWidth ? "gray" : "lightgray"}`,
                             }}
                             onClick={() => {
                                 userCanvas.current.bigPenMode();
@@ -282,7 +280,6 @@ export const UserCanvasContainer = () => {
                     <UserAreaContainer>
                         <UserContainer>
                             <UserBox>
-                                <UserColorBox />
                                 <p>{username}</p>
                             </UserBox>
                         </UserContainer>
@@ -383,12 +380,6 @@ const UserContainer = styled.div`
     align-items: center;
     gap: 10px;
     margin-right: 10px;
-`;
-
-const UserColorBox = styled.div`
-    width: 15px;
-    height: 15px;
-    background: gray;
 `;
 
 const UserBox = styled.div`

@@ -7,7 +7,7 @@ export const Canvas = class extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.canvas = React.createRef();
-        this.state = { strokeWidth: 3, color: props.color };
+        this.state = { strokeWidth: 3 };
     }
 
     bigPenMode = () => {
@@ -48,10 +48,6 @@ export const Canvas = class extends React.Component<any, any> {
 
     grabImage = () => {
         return this.canvas.current?.exportImage("png");
-    };
-
-    setColor = (color: string) => {
-        this.setState({ color: color });
     };
 
     render() {
