@@ -5,7 +5,9 @@ Namen der Studenten:
 
 Besonderes Augenmerk: gute UX
 
-Sonstiges: Die Dokumentation befindet sich in README.md und in README.txt. 
-Die Bilder zum UI befinden sich im images-Ordner (in der Markdown-File direkt eingefügt)
+Sonstiges: 
+Die Dokumentation befindet sich in README.md und in README.txt. 
+Die Bilder zum UI befinden sich im images-Ordner (in der Markdown-File direkt eingefügt).
+Informationen zum Starten des Projekts sind ebenalls am Ende der README zu finden.
 
 GitHub-Link: https://github.com/Lukas2104/VerteilteSystemeProjekt
