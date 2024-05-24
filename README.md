@@ -19,13 +19,57 @@ Im Rahmen der Umsetzung des Projektes sollen folgende Anforderungen erfüllt wer
 - und die Nachrichten werden an alle Teilnehmer im gleichen LAN (Auto-Erkennung) gesendet.
 
 Als Benutzeroberfläche soll eine vereinfachte Version des PictoChats nachgebaut werden.
-Die Anwendung wird in Javscript/Typescript mit einem React Frontend implementiert.
-
 
 ## Umsetzung
+Die Anwendung wird in Javscript/Typescript mit einem React Frontend implementiert.
+
+### Frontend
+Das Frontend wurde in React geschrieben. Dementsprechend sieht die Projektstruktur wie folgt aus:
+
+bilermalenundverschicken
+├── node_modules
+├── public
+├── radata
+├── src
+│   ├── compontents
+│   │   ├── UserCanvas.tsx
+│   │   ├── UserCanvasContainer.tsx
+│   ├── pages
+│   │   ├── Home.tsx
+│   │   ├── UserContainer.tsx
+│   ├── styles
+│   │   ├── mainStyles.css
+│   ├── App.tsx
+│   ├── index.tsx
+├── .gitignore
+├── package-lock.json
+├── package.json
+├── server.js
+└── tsconfig.json
 
 ### Backend
 
-### Frontend
-
 ## Installation und Ausführen der Anwendung
+
+1. Repository klonen:
+```
+clone git@github.com:Lukas2104/VerteilteSystemeProjekt.git
+cd VerteilteSystemeProjekt/bildermalenundverschicken
+```
+
+2. Abhängigkeiten installieren:
+```
+npm install
+```
+
+3. Server starten:
+```
+node server.js
+```
+
+4. Applikation starteN:
+```
+npm start
+```
+
+Die Anwendung kann jetzt (in mehreren Browsertabs) über `http://localhost:3000` erreicht werden.
