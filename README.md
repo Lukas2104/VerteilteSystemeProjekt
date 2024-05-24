@@ -26,6 +26,7 @@ Die Anwendung wird in Javscript/Typescript mit einem React Frontend implementier
 ### Frontend
 Das Frontend wurde in React geschrieben. Dementsprechend sieht die Projektstruktur wie folgt aus:
 
+```md
 bilermalenundverschicken
 ├── node_modules
 ├── public
@@ -46,6 +47,7 @@ bilermalenundverschicken
 ├── package.json
 ├── server.js
 └── tsconfig.json
+```
 
 ### Backend
 
